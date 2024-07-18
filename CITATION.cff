@@ -4,8 +4,7 @@ authors:
 - family-names: "Guillén-Pacho"
   given-names: "Ibai"
   orcid: "https://orcid.org/0000-0001-7801-8815"
-title: "Telegram Dataset Builder"
-version: 1.0.0
+title: "oeg-upm/telegram-dataset-builder"
 doi: 10.5281/zenodo.12773159
 date-released: 2024-07-18
 url: "https://github.com/oeg-upm/telegram-dataset-builder"
