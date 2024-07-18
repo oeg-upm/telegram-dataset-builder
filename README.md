@@ -1,5 +1,7 @@
 # Telegram Dataset Builder
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.12773159.svg)](https://doi.org/10.5281/zenodo.12773159)
+
 This project uses Telethon to build datasets of public Telegram groups. To do this, it needs the channel name or ID. The result is a json file with the channel information and several json files organised in folders containing the messages in batches.
 
 ## Requirements
