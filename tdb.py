@@ -52,7 +52,7 @@ class TelethonHandler:
             else:
                 return message, message.id
 
-        return self.client.loop.run_until_complete(async_get_a_messages(self, chat_id, message_id))
+        return self.client.loop.run_until_complete(async_get_a_messages(self, int(chat_id), int(message_id)))
 
     def get_last_message(self, chat_id:int)-> tuple:
         """Gather last menssage in a chat.
@@ -70,7 +70,7 @@ class TelethonHandler:
             else:
                 return message, message.id
 
-        return self.client.loop.run_until_complete(async_get_last_messages(self, chat_id))
+        return self.client.loop.run_until_complete(async_get_last_messages(self, int(chat_id)))
 
     def get_n_messages(self, chat_id:int, n_messages=None, offset_id=0)-> tuple:
         """Gather menssages in a chat.
@@ -88,7 +88,7 @@ class TelethonHandler:
             
             limit = 100  # Maximum number of messages per request (adjust as needed)
             while True:
-                messages = await self.client.get_messages(int(chat_id), offset_id=offset_id, limit=limit, reverse=True) #Reverse True gets messages from oldest to newest
+                messages = await self.client.get_messages(chat_id, offset_id=offset_id, limit=limit, reverse=True) #Reverse True gets messages from oldest to newest
                 if not messages:
                     break  # If there are no more messages, exit the loop
                 
@@ -110,7 +110,7 @@ class TelethonHandler:
             else:
                 return all_messages, offset_id
 
-        return self.client.loop.run_until_complete(async_get_n_messages(self, chat_id, n_messages, offset_id))
+        return self.client.loop.run_until_complete(async_get_n_messages(self, int(chat_id), n_messages, int(offset_id)))
 
     def get_channel_chats(self, channel_name:str)-> list:
         """Get chat ids from channel.
@@ -130,7 +130,7 @@ class TelethonHandler:
         
         return self.client.loop.run_until_complete(async_get_channel_chats(self, channel_name))
 
-    def get_chat_info(self, chat_id):
+    def get_chat_info(self, chat_id:int):
         """Gets chat info in dictionary format.
 
         Args:
@@ -151,7 +151,7 @@ class TelethonHandler:
                 chat_info["participants_count"]= channel.full_chat.participants_count
 
             return chat_info
-        return self.client.loop.run_until_complete(async_get_chat_info(self, chat_id))
+        return self.client.loop.run_until_complete(async_get_chat_info(self, int(chat_id)))
 
 
 class Utils:
