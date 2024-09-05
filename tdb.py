@@ -34,6 +34,44 @@ class TelethonHandler:
 
         assert self.client.start()
 
+
+    def get_a_message(self, chat_id:int, message_id:int)-> tuple:
+        """Gather a menssage in a chat.
+
+        Args:
+            chat_id (int): ID of the chat to get message from.
+            message_id (int): ID of the message in the chat.
+        Returns:
+            tuple(list,int): Message , message id.
+        """
+        async def async_get_a_messages(self, chat_id, message_id):
+            message = await self.client.get_messages(chat_id, ids=message_id)
+
+            if not message: # If no message found return None
+                return None, None
+            else:
+                return message, message.id
+
+        return self.client.loop.run_until_complete(async_get_a_messages(self, chat_id, message_id))
+
+    def get_last_message(self, chat_id:int)-> tuple:
+        """Gather last menssage in a chat.
+
+        Args:
+            chat_id (int): ID of the chat to get message from.
+        Returns:
+            tuple(list,int): Message , message id.
+        """
+        async def async_get_last_messages(self, chat_id):
+            message = await self.client.get_messages(chat_id, offset_id=0, limit=1, reverse=False) #Reverse False gets messages from newest to oldest
+            message = message[0]
+            if not message: # If no message found return None
+                return None, None
+            else:
+                return message, message.id
+
+        return self.client.loop.run_until_complete(async_get_last_messages(self, chat_id))
+
     def get_n_messages(self, chat_id:int, n_messages=None, offset_id=0)-> tuple:
         """Gather menssages in a chat.
 
@@ -50,10 +88,11 @@ class TelethonHandler:
             
             limit = 100  # Maximum number of messages per request (adjust as needed)
             while True:
-                messages = await self.client.get_messages(chat_id, offset_id=offset_id, limit=limit, reverse=True) #Reverse True gets messages from oldest to newest
+                messages = await self.client.get_messages(int(chat_id), offset_id=offset_id, limit=limit, reverse=True) #Reverse True gets messages from oldest to newest
                 if not messages:
                     break  # If there are no more messages, exit the loop
-                elif n_messages:
+                
+                if n_messages: # If maximum number of messages requested
                     if len(all_messages) == n_messages:
                         break
                     elif len(all_messages)+len(messages) > n_messages:
@@ -62,6 +101,7 @@ class TelethonHandler:
                         offset_id = messages[-1].id
                         all_messages.extend(messages)
                         break
+                
                 all_messages.extend(messages)
                 offset_id = messages[-1].id  # Update the offset_id for the next request
             
@@ -116,31 +156,68 @@ class TelethonHandler:
 
 class Utils:
     @staticmethod
-    def save_dict(_dict, path):
+    def save_dict(_dict:dict, path:str) -> bool:
+        """Dumps dict to a json file..
+
+        Args:
+            _dict (dict): Dict to be dumped.
+            path (str): Path to dump.
+
+        Returns:
+            bool: True if the file is dumped.
+        """
         with open(path, "w") as f:
             f.write(json.dumps(_dict))
-        return f"File dumped to {path}"
+        print(f"File dumped to {path}")
+        return True
+    
+    @staticmethod
+    def load_dict(path:str) -> json:
+        """Load from a json file.
+
+        Args:
+            path (str): Path of the json file.
+
+        Returns:
+            json: Loaded json.
+        """
+        with open(path, "r") as f:
+            return json.load(f)
 
     @staticmethod
-    def create_folder_if_not_exists(folder_path):
+    def create_folder_if_not_exists(folder_path:str) -> bool:
+        """Create a folder if it is not in the system.
+
+        Args:
+            folder_path (str): Desired folder path to create.
+
+        Returns:
+            bool: True if the folder is created. False if it already exists.
+        """
         if not os.path.exists(folder_path):
             os.makedirs(folder_path)
             print(f"Folder '{folder_path}' created.")
+            return True
         else:
             print(f"Folder '{folder_path}' already exists.")
+            return False
 
     @staticmethod
-    def format_message(message):
+    def format_message(message, **kwargs) -> json:
         """Convert Telethon message to dict.
 
         Args:
             message (_type_): Telethon Message.
-
+            **kwargs: Any value in the dict can be replaced manually by passing in a value. New attributes can also be added.
         Returns:
             dict: dictionary of the message relevant properties.
         """
         msg = message.__dict__.copy()
-        msg_key= f'{msg["_chat_peer"].channel_id}_{msg["id"]}'
+
+        if kwargs.get("msg_key") is None: 
+            msg_key= f'{msg["_chat_peer"].channel_id}_{msg["id"]}' # Default value of dict key if no other msg_key
+        else:
+            msg_key= kwargs.get("msg_key")
 
         if msg["media"]:
             content_type= type(msg["media"]).__name__
@@ -281,4 +358,9 @@ class Utils:
         if msg["edit_date"]:
             msg["edit_date"]= msg["edit_date"].isoformat() # Convert date to serialize in json
 
+        # Update the dict with manually set attributes
+        if "msg_key" in kwargs: del kwargs["msg_key"] # The key of the dict is not added to the dict by default
+
+        if kwargs: msg.update(kwargs) # If any element in kwargs update the msg with its values
+        
         return {msg_key: msg}
