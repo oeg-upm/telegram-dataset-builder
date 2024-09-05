@@ -4,8 +4,6 @@ from datetime import datetime
 
 # This script monitors the messages sent in a series of telegram groups to note the evolution of their metrics and values.
 
-
-
 FORCE_COLD_START= False # Force cold start allways
 BATCH_SIZE= 1000 # Maximum number of messages per output json file.
 TRACKER_WINDOW= 2592000 # Time during which channel messages are monitored (in seconds).
@@ -127,10 +125,12 @@ if __name__ == "__main__":
 
     # First step: Get information of all channels.
     channel_info= {}
+    chats_ids= []
     for channel_name in channel_names:
         channel_info[channel_name]= {}
-        chats_ids= TG.get_channel_chats(channel_name)
-        for chat_id in chats_ids:
+        chat_ids= TG.get_channel_chats(channel_name)
+        chats_ids.extend(chat_ids)
+        for chat_id in chat_ids:
             chat_id2channel_name[chat_id]= channel_name
             channel_info[channel_name][chat_id] = TG.get_chat_info(chat_id)
 
