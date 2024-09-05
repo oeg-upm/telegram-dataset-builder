@@ -2,7 +2,9 @@ from tdb import TelethonHandler, Utils
 import os, time
 from datetime import datetime
 
-# Este script monitoriza los mensajes mandados en una serie de grupos de telegram para anotar la evolución de sus métricas.
+# This script monitors the messages sent in a series of telegram groups to note the evolution of their metrics and values.
+
+
 
 FORCE_COLD_START= False # Force cold start allways
 BATCH_SIZE= 1000 # Maximum number of messages per output json file.
