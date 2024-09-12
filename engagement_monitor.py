@@ -12,7 +12,7 @@ TRACKER_TIMER= 300 # Periodicity of message monitoring.
 home_path = "."# Variable to set a full path to all files and folders. Needed to create daemons
 
 # Define the names of the telegram channels to retrieve message from. (Can be names or ID-s)
-channel_names= ["MediterraneoDGT", "euskalnews", "elentir", "smolny7", "ElDiestro", "alertanacional"]
+channel_names= ["foo", "bar"]
 
 telegram_env_path= f"{home_path}/telegram.env" # Telegram API credentials environment file path.
 output_chats= f"{home_path}/monitoring" # Directory to save all the batched messages.
