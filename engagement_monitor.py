@@ -9,11 +9,13 @@ BATCH_SIZE= 1000 # Maximum number of messages per output json file.
 TRACKER_WINDOW= 2592000 # Time during which channel messages are monitored (in seconds).
 TRACKER_TIMER= 300 # Periodicity of message monitoring.
 
-# Define the names of the telegram channels to retrieve message from. (Can be names or ID-s)
-channel_names= ["foo", "bar"]
+home_path = "."# Variable to set a full path to all files and folders. Needed to create daemons
 
-telegram_env_path= "telegram.env" # Telegram API credentials environment file path.
-output_chats= "monitoring" # Directory to save all the batched messages.
+# Define the names of the telegram channels to retrieve message from. (Can be names or ID-s)
+channel_names= ["MediterraneoDGT", "euskalnews", "elentir", "smolny7", "ElDiestro", "alertanacional"]
+
+telegram_env_path= f"{home_path}/telegram.env" # Telegram API credentials environment file path.
+output_chats= f"{home_path}/monitoring" # Directory to save all the batched messages.
 output_channel_info= f"{output_chats}/channels.json" # Path for the channels info output file.
 
 output_runtime= f"{output_chats}/runtime" # Directory to save all the batched messages.
