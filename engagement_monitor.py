@@ -10,6 +10,7 @@ TRACKER_WINDOW= 2592000 # Time during which channel messages are monitored (in s
 TRACKER_TIMER= 300 # Periodicity of message monitoring.
 
 home_path = "."# Variable to set a full path to all files and folders. Needed to create daemons
+session_id= f"{home_path}/session0.session"
 
 # Define the names of the telegram channels to retrieve message from. (Can be names or ID-s)
 channel_names= ["foo", "bar"]
@@ -123,7 +124,7 @@ if __name__ == "__main__":
     # Initialize handler class and create a session. This must require to authenticate youserlf by introducing a code sent by telegram once executed.
     # Once the session is created you wont be ask for any number again.
     TG = TelethonHandler(telegram_env_path)
-    TG.connect_client()
+    TG.connect_client(session_id=session_id)
 
     # First step: Get information of all channels.
     channel_info= {}
